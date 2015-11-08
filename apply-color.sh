@@ -31,15 +31,27 @@ linestart=$(getlinecaption $sbyte);
 lspattern="^$linestart\s\s.*$"
 clr=${fgcmd//@@@/$fgcolor}${bgcmd//@@@/$bgcolor}
 cmdstream=$(cmdlinestream $sbyte $length | sed 's/:/\n/g')
-bpos=$(hextodec $sbyte);
+iterator=1;
+enabler=0;
+streamlng=$(echo "$cmdstream" | wc -l);
 while read -r line; do
     if [[ $line =~ $lspattern ]]; then
-#         echo -e "$clr$line$offcmd";
-        hexpattern='^([0-9a-f]{8}\s*)(([0-9a-f]{2}\s*?){14})(([0-9a-f]{2}\s*?){1})(([0-9a-f]{2}\s*?){1})(\s*\|.*\|)$'
-        vispattern='^(.*)(\s*\|.{14})(.{1})(.{1}\|)$'
-        echo "$line" | perl -pe "s/$hexpattern/\1\2$clr\4$offcmd\6\8/" | \
-        perl -pe "s/$vispattern/\1\2$clr\3$offcmd\4/"
+        enabler=1;
+        offset=$(echo "obase=10;ibase=16;$(hextobc $sbyte) % 10" | bc);
+        lng=$(echo "$cmdstream" | sed "${iterator}q;d");
+        colorbytes "$line" $fgcolor $bgcolor $offset $lng;
+        offset=0;
+    # if found line, process few next lines
+    elif [ $enabler -eq 1 ]; then
+        let iterator++;
+        lng=$(echo "$cmdstream" | sed "${iterator}q;d");
+        colorbytes "$line" $fgcolor $bgcolor $offset $lng;
     else
         echo "$line";
+    fi;
+
+    # if end of command stream, disable
+    if [ $iterator -ge $streamlng ]; then
+        enabler=0;
     fi;
 done;
