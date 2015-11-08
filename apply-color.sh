@@ -6,6 +6,8 @@ if [ $# -lt 2 ]; then
     echo "Error! Too few arguments";
     exit 1;
 fi;
+
+# set variables
 fgcolor=$1;
 bgcolor=$2;
 sbyte=$3;
@@ -16,17 +18,15 @@ offcmd="\033[0m"
 if [ $# -ge 4 ]; then
     length=$4;
 fi;
-# echo "color $length bytes starting on $sbyte-th byte to color number $bgcolor";
-hexpat='^0x[0-9a-f]*$'
-decpat='^[0-9]*$'
-if [[ $sbyte =~ $hexpat ]]; then
-    echo "hexed sbyte"
-elif [[ $sbyte =~ $decpat ]]; then
-    echo "decimal sbyte"
-else
-    echo "Error! Invalid input"
-    exit 2
-fi;
+
+# source all necessary scripts
+source ./func.sh
+
+# convert inputs to hexadecimal form
+length=$(tohex $length);
+sbyte=$(tohex $sbyte);
+
+echo "color $length bytes starting on $sbyte-th byte to color number $bgcolor";
 clr=${fgcmd//@@@/$fgcolor}${bgcmd//@@@/$bgcolor}
 # echo -e "\e[38;5;1m$clr chuj $offcmd"
 exit 0;
