@@ -2,6 +2,9 @@
 # function library for coloring book
 
 hexpat='^0x[0-9a-fA-F]*$'
+bgcmd="\e[48;5;@@@m"
+fgcmd="\e[38;5;@@@m"
+offcmd="\033[0m"
 
 # convert input number to hexadecimal form
 function tohex {
@@ -76,4 +79,35 @@ function cmdlinestream {
     done;
     stream=$(echo -ne "$stream:$lng");
     echo $stream;
+}
+
+# get num of bytes after demanded
+function bytesafter {
+    if [ $# -ne 2 ]; then
+        echo "Error! Invalid arguments for bytesafter()";
+        exit 1;
+    fi;
+    offset=$1;
+    length=$2;
+    echo "16 - ( $offset + $length )" | bc;
+}
+
+# color given number of bytes starting at given offset
+# usage: colorbytes line fg bg offset length
+function colorbytes {
+    if [ $# -ne 5 ]; then
+        echo "Error! Invalid arguments for colorbytes()";
+        exit 1;
+    fi;
+    line=$1;
+    fgcolor=$2;
+    bgcolor=$3;
+    offset=$4;
+    length=$5;
+
+    clr=${fgcmd//@@@/$fgcolor}${bgcmd//@@@/$bgcolor}
+    hexpattern='^([0-9a-f]{8}\s*)(([0-9a-f]{2}\s*?){14})(([0-9a-f]{2}\s*?){1})(([0-9a-f]{2}\s*?){1})(\s*\|.*\|)$'
+    vispattern='^(.*)(\s*\|.{14})(.{1})(.{1}\|)$'
+    echo "$line" | perl -pe "s/$hexpattern/\1\2$clr\4$offcmd\6\8/" | \
+    perl -pe "s/$vispattern/\1\2$clr\3$offcmd\4/"
 }
