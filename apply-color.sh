@@ -41,13 +41,16 @@ while read -r line; do
         lng=$(echo "$cmdstream" | sed "${iterator}q;d");
         colorbytes "$line" $fgcolor $bgcolor $offset $lng;
         offset=0;
-    # if found line, process few next lines
     elif [ $enabler -eq 1 ]; then
-        let iterator++;
         lng=$(echo "$cmdstream" | sed "${iterator}q;d");
         colorbytes "$line" $fgcolor $bgcolor $offset $lng;
     else
         echo "$line";
+    fi;
+
+    # if found line, process few next lines
+    if [ $enabler -eq 1 ]; then
+        let iterator++;
     fi;
 
     # if end of command stream, disable
