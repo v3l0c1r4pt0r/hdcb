@@ -14,7 +14,7 @@ sbyte=$3;
 length=4;
 bgcmd="\e[48;5;@@@m"
 fgcmd="\e[38;5;@@@m"
-offcmd="\033[0m"
+offcmd="\e[0m"
 if [ $# -ge 4 ]; then
     length=$4;
 fi;
