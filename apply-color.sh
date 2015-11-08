@@ -26,15 +26,20 @@ source ./func.sh
 length=$(tohex $length);
 sbyte=$(tohex $sbyte);
 
-echo "color $length bytes starting on $sbyte-th byte to color number $bgcolor";
+# echo "color $length bytes starting on $sbyte-th byte to color number $bgcolor";
 linestart=$(getlinecaption $sbyte);
 lspattern="^$linestart\s\s.*$"
 clr=${fgcmd//@@@/$fgcolor}${bgcmd//@@@/$bgcolor}
-# echo -e "\e[38;5;1m$clr chuj $offcmd"
-while read line; do
+cmdstream=$(cmdlinestream $sbyte $length | sed 's/:/\n/g')
+bpos=$(hextodec $sbyte);
+while read -r line; do
     if [[ $line =~ $lspattern ]]; then
-        echo -e "$clr$line$offcmd";
+#         echo -e "$clr$line$offcmd";
+        hexpattern='^([0-9a-f]{8}\s*)(([0-9a-f]{2}\s*?){14})(([0-9a-f]{2}\s*?){1})(([0-9a-f]{2}\s*?){1})(\s*\|.*\|)$'
+        vispattern='^(.*)(\s*\|.{14})(.{1})(.{1}\|)$'
+        echo "$line" | perl -pe "s/$hexpattern/\1\2$clr\4$offcmd\6\8/" | \
+        perl -pe "s/$vispattern/\1\2$clr\3$offcmd\4/"
     else
-        echo -e "$line";
+        echo "$line";
     fi;
 done;
