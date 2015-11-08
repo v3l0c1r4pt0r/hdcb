@@ -27,6 +27,14 @@ length=$(tohex $length);
 sbyte=$(tohex $sbyte);
 
 echo "color $length bytes starting on $sbyte-th byte to color number $bgcolor";
+linestart=$(getlinecaption $sbyte);
+lspattern="^$linestart\s\s.*$"
 clr=${fgcmd//@@@/$fgcolor}${bgcmd//@@@/$bgcolor}
 # echo -e "\e[38;5;1m$clr chuj $offcmd"
-exit 0;
+while read line; do
+    if [[ $line =~ $lspattern ]]; then
+        echo -e "$clr$line$offcmd";
+    else
+        echo -e "$line";
+    fi;
+done;
