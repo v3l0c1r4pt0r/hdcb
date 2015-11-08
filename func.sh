@@ -21,18 +21,59 @@ function tohex {
     fi;
 }
 
+# convert hex number to bc-compatible format
+function hextobc {
+    if [ $# -ne 1 ]; then
+        echo "Error! Invalid arguments for getlinecaption()";
+        exit 1;
+    fi;
+    input=${1//0x/};
+    input=${input^^};
+    echo $input;
+}
+
+# convert hex to decimal
+function hextodec {
+    if [ $# -ne 1 ]; then
+        echo "Error! Invalid arguments for getlinecaption()";
+        exit 1;
+    fi;
+    comm='ibase=16;@num'
+    comm=${comm//@num/$(hextobc $1)};
+    echo "$comm" | bc;
+}
+
 # get first byte number in line that contains byte given
 function getlinecaption {
     if [ $# -ne 1 ]; then
         echo "Error! Invalid arguments for getlinecaption()";
         exit 1;
     fi;
-    input=$1
-    if [[ $input =~ $hexpat ]]; then
-        input=${input//0x/};
-    fi;
-    input=${input^^};
+    input=$(hextobc $1);
     comm='obase=16;ibase=16;@@@ / 10 * 10'
     res=$(echo "${comm//@@@/$input}" | bc);
     printf "%08s\n" ${res,,} | sed 's/\s/0/g';
+}
+
+# get number of bytes in subsequent lines that need to be colored
+# usage: cmdlinestream start length;
+function cmdlinestream {
+    if [ $# -ne 2 ]; then
+        echo "Error! Invalid arguments for cmdlinestream()";
+        exit 1;
+    fi;
+    sbyte=$(hextobc $1);
+    lng=$(hextodec $2);
+    comm='obase=10;ibase=16;10 - ( @sbyte % 10 )'
+    comm=${comm//@sbyte/$sbyte};
+    next=$(echo "$comm" | bc);
+    let lng-=$next;
+    stream=$next;
+    for (( i=lng; i>=16; i-=16 ));
+    do
+        stream=$(echo -ne "$stream:16");
+        let lng-=16;
+    done;
+    stream=$(echo -ne "$stream:$lng");
+    echo $stream;
 }
