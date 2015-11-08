@@ -106,8 +106,18 @@ function colorbytes {
     length=$5;
 
     clr=${fgcmd//@@@/$fgcolor}${bgcmd//@@@/$bgcolor}
-    hexpattern='^([0-9a-f]{8}\s*)(([0-9a-f]{2}\s*?){14})(([0-9a-f]{2}\s*?){1})(([0-9a-f]{2}\s*?){1})(\s*\|.*\|)$'
-    vispattern='^(.*)(\s*\|.{14})(.{1})(.{1}\|)$'
+    hexpattern='^([0-9a-f]{8}\s*)(([0-9a-f]{2}\s*?){@bef})(([0-9a-f]{2}\s*?){@at})(([0-9a-f]{2}\s*?){@aft})(\s*\|.*\|)$'
+    vispattern='^(.*)(\s*\|.{@bef})(.{@at})(.{@aft}\|)$'
+    after=$(bytesafter $offset $length);
+
+    hexpattern=${hexpattern//@bef/$offset};
+    hexpattern=${hexpattern//@at/$length};
+    hexpattern=${hexpattern//@aft/$after};
+
+    vispattern=${vispattern//@bef/$offset};
+    vispattern=${vispattern//@at/$length};
+    vispattern=${vispattern//@aft/$after};
+
     echo "$line" | perl -pe "s/$hexpattern/\1\2$clr\4$offcmd\6\8/" | \
     perl -pe "s/$vispattern/\1\2$clr\3$offcmd\4/"
 }
