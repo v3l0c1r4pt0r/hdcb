@@ -54,7 +54,7 @@ while read -r line; do
     fi;
 
     # if end of command stream, disable
-    if [ $iterator -ge $streamlng ]; then
+    if [[ $enabler -eq 1 && $iterator -gt $streamlng ]]; then
         enabler=0;
     fi;
 done;

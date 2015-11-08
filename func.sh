@@ -83,7 +83,9 @@ function cmdlinestream {
         stream=$(echo -ne "$stream:16");
         let lng-=16;
     done;
-    stream=$(echo -ne "$stream:$lng");
+    if [ $lng -ne 0 ]; then
+        stream=$(echo -ne "$stream:$lng");
+    fi;
     echo $stream;
 }
 
