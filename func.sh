@@ -67,6 +67,12 @@ function cmdlinestream {
     fi;
     sbyte=$(hextobc $1);
     lng=$(hextodec $2);
+    length=$(hextobc $2);
+    end=$(echo "obase=10;ibase=16;$sbyte % 10 + $length" | bc);
+    if [ $end -lt 16 ]; then
+        echo $lng;
+        return;
+    fi;
     comm='obase=10;ibase=16;10 - ( @sbyte % 10 )'
     comm=${comm//@sbyte/$sbyte};
     next=$(echo "$comm" | bc);
