@@ -6,6 +6,7 @@ if [ $# -ne 2 ]; then
 fi;
 
 source ./hdcb-func.sh
+source ./colors.sh
 
 # vars
 script=$1;
@@ -14,6 +15,6 @@ binfile=$2;
 # get hex dump
 hd=$(hexdump -Cv $binfile)
 
-cursor=0
+init;
 
 source ./$script;

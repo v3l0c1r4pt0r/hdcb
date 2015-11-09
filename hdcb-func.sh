@@ -1,6 +1,18 @@
 #!/bin/sh
 # function library for hdcb main script
 
+# initialize environment
+function init {
+    cursor=0
+    clriterator=0
+}
+
+# pick next default color pair
+function pick {
+    echo "${clrlist[$clriterator]}";
+    let clriterator++;
+}
+
 function color {
     if [ $# -lt 2 ]; then
         echo "Error! Invalid arguments for color()";
