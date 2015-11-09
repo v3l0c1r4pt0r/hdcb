@@ -1,7 +1,7 @@
 #!./hdcb.sh
-color "0:1" 1;
-color "0:2" 1;
-color "0:3" 6;
-color "15:4" 2 11;
-color "0:5" 1;
+color 1 "0:1";
+color 1 "0:2";
+color 6 "0:3";
+color 2 "15:4" 11;
+color 1 "0:5";
 print;

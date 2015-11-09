@@ -7,8 +7,8 @@ function color {
         exit 1;
     fi;
 
-    color=$1
-    length=$2
+    length=$1
+    color=$2
     offset=$cursor
 
     if [ $# -ne 2 ]; then
