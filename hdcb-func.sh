@@ -18,3 +18,7 @@ function color {
     hd="$(echo "$hd" | ./apply-color.sh $(echo "$color" | sed 's/:/ /') $offset $length)";
     cursor=$(echo "$offset + $length" | bc);
 }
+
+function print {
+    echo "$hd";
+}

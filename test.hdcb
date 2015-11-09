@@ -4,4 +4,4 @@ color "0:2" 1;
 color "0:3" 6;
 color "15:4" 2 11;
 color "0:5" 1;
-echo "$hd"
+print;
