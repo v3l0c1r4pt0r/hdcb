@@ -20,7 +20,7 @@ if [ $# -ge 4 ]; then
 fi;
 
 # source all necessary scripts
-source ./func.sh
+source ./apply-func.sh
 
 # convert inputs to hexadecimal form
 length=$(tohex $length);
