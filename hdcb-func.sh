@@ -11,6 +11,10 @@ function init {
 function pick {
     pickedcolor="${clrlist[$clriterator]}";
     # FIXME: removing colro from array would be safer
+    if [ "${clrlist[$clriterator]}t" == "t" ]; then
+        echo "Warning! Exhausted all possible automatic color pairs";
+        pickedcolor="9:0";
+    fi;
     let clriterator++;
 }
 
