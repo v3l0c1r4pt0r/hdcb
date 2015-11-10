@@ -9,21 +9,27 @@ function init {
 
 # pick next default color pair
 function pick {
-    echo "${clrlist[$clriterator]}";
+    pickedcolor="${clrlist[$clriterator]}";
+    # FIXME: removing colro from array would be safer
     let clriterator++;
 }
 
 function color {
-    if [ $# -lt 2 ]; then
+    if [ $# -lt 1 ]; then
         echo "Error! Invalid arguments for color()";
         exit 1;
     fi;
 
     length=$1
-    color=$2
     offset=$cursor
+    if [ $# -ge 2 ]; then
+        color=$2;
+    else
+        pick;
+        color=$pickedcolor;
+    fi;
 
-    if [ $# -ne 2 ]; then
+    if [ $# -ge 3 ]; then
         offset=$3
     fi;
 
