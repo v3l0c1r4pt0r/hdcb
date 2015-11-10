@@ -10,4 +10,3 @@ for (( X=0; X<4; X++)); do
     color 4 "0:7"; # num of sectors
 done;
 color 2 "15:8"; # signature
-print;

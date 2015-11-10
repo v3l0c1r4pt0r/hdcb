@@ -18,3 +18,5 @@ hd=$(hexdump -Cv $binfile)
 init;
 
 source ./$script;
+
+print;
