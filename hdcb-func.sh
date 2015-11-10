@@ -7,6 +7,10 @@ function init {
     clriterator=0
 }
 
+function squeeze {
+    hd=$(hexdump -C $binfile)
+}
+
 # pick next default color pair
 function pick {
     pickedcolor="${clrlist[$clriterator]}";
