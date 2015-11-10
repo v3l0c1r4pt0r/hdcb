@@ -1,0 +1,13 @@
+#!./hdcb.sh
+# color 446;
+cursor=446
+for (( X=0; X<4; X++)); do
+    color 1 "0:2";  # status
+    color 3 "0:3";  # CHS
+    color 1 "15:4"; # type
+    color 3 "0:5";  # CHS end
+    color 4 "0:6";  # start LBA
+    color 4 "0:7"; # num of sectors
+done;
+color 2 "15:8"; # signature
+print;
