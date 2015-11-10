@@ -23,21 +23,25 @@ fi;
 source ./apply-func.sh
 
 # convert inputs to hexadecimal form
-length=$(tohex $length);
-sbyte=$(tohex $sbyte);
+tohex $length;
+length=$tohex;
+tohex $sbyte;
+sbyte=$tohex;
 
-# echo "color $length bytes starting on $sbyte-th byte to color number $bgcolor";
 linestart=$(getlinecaption $sbyte);
 lspattern="^$linestart\s\s.*$"
 clr=${fgcmd//@@@/$fgcolor}${bgcmd//@@@/$bgcolor}
-cmdstream=$(cmdlinestream $sbyte $length | sed 's/:/\n/g')
+cmdlinestream $sbyte $length;
+cmdstream=$(echo $cmdlinestream | sed 's/:/\n/g'); 
+# FIXME: find a way without to replace without a subshell like ${var//:/\n} ?
 iterator=1;
 enabler=0;
 streamlng=$(echo "$cmdstream" | wc -l);
 while read -r line; do
     if [[ $line =~ $lspattern ]]; then
         enabler=1;
-        offset=$(echo "obase=10;ibase=16;$(hextobc $sbyte) % 10" | bc);
+        hextobc $sbyte;
+        offset=$(echo "obase=10;ibase=16;$hextobc % 10" | bc);
         lng=$(echo "$cmdstream" | sed "${iterator}q;d");
         colorbytes "$line" $fgcolor $bgcolor $offset $lng;
         offset=0;

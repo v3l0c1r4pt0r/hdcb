@@ -37,8 +37,8 @@ function color {
         offset=$3
     fi;
 
-    hd="$(echo "$hd" | ./apply-color.sh $(echo "$color" | sed 's/:/ /') $offset $length)";
-    cursor=$(echo "$offset + $length" | bc);
+    hd="$(echo "$hd" | ./apply-color.sh ${color//:/ } $offset $length)";
+    cursor=$((offset + length));
 }
 
 function print {

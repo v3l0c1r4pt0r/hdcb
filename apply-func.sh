@@ -14,10 +14,10 @@ function tohex {
     fi;
     decpat='^[0-9]*$'
     if [[ $1 =~ $hexpat ]]; then
-        echo $1;
+        tohex="$1";
     elif [[ $1 =~ $decpat ]]; then
         res=$(echo "obase=16;$1" | bc)
-        echo "0x$res"
+        tohex="0x$res";
     else
         echo "Error! Invalid input for tohex()"
         exit 2
@@ -32,7 +32,7 @@ function hextobc {
     fi;
     input=${1//0x/};
     input=${input^^};
-    echo $input;
+    hextobc=$input;
 }
 
 # convert hex to decimal
@@ -42,8 +42,9 @@ function hextodec {
         exit 1;
     fi;
     comm='ibase=16;@num'
-    comm=${comm//@num/$(hextobc $1)};
-    echo "$comm" | bc;
+    hextobc $1;
+    comm=${comm//@num/$hextobc};
+    hextodec=$(echo "$comm" | bc);
 }
 
 # get first byte number in line that contains byte given
@@ -52,7 +53,8 @@ function getlinecaption {
         echo "Error! Invalid arguments for getlinecaption()";
         exit 1;
     fi;
-    input=$(hextobc $1);
+    hextobc $1;
+    input=$hextobc;
     comm='obase=16;ibase=16;@@@ / 10 * 10'
     res=$(echo "${comm//@@@/$input}" | bc);
     printf "%08s\n" ${res,,} | sed 's/\s/0/g';
@@ -65,12 +67,15 @@ function cmdlinestream {
         echo "Error! Invalid arguments for cmdlinestream()";
         exit 1;
     fi;
-    sbyte=$(hextobc $1);
-    lng=$(hextodec $2);
-    length=$(hextobc $2);
+    hextobc $1;
+    sbyte=$hextobc;
+    hextodec $2;
+    lng=$hextodec;
+    hextobc $2;
+    length=$hextobc;
     end=$(echo "obase=10;ibase=16;$sbyte % 10 + $length" | bc);
     if [ $end -lt 16 ]; then
-        echo $lng;
+        cmdlinestream=$lng;
         return;
     fi;
     comm='obase=10;ibase=16;10 - ( @sbyte % 10 )'
@@ -80,13 +85,13 @@ function cmdlinestream {
     stream=$next;
     for (( i=lng; i>=16; i-=16 ));
     do
-        stream=$(echo -ne "$stream:16");
+        stream="$stream:16";
         let lng-=16;
     done;
     if [ $lng -ne 0 ]; then
-        stream=$(echo -ne "$stream:$lng");
+        stream="$stream:$lng";
     fi;
-    echo $stream;
+    cmdlinestream=$stream;
 }
 
 # get num of bytes after demanded
@@ -97,7 +102,7 @@ function bytesafter {
     fi;
     offset=$1;
     length=$2;
-    echo "16 - ( $offset + $length )" | bc;
+    bytesafter=$((16 - ( offset + length ) ));
 }
 
 # color given number of bytes starting at given offset
@@ -116,7 +121,8 @@ function colorbytes {
     clr=${fgcmd//@@@/$fgcolor}${bgcmd//@@@/$bgcolor}
     hexpattern='^([0-9a-f]{8}\s*)((?:(?:\e.*m)?[0-9a-f]{2}\s*?(?:\e.*m)?){@bef})((?:(?:\e.*m)?[0-9a-f]{2}\s*?(?:\e.*m)?){@at})((?:(?:\e.*m)?[0-9a-f]{2}\s*?(?:\e.*m)?){@aft})(\s*\|.*\|)$'
     vispattern='^(.*)(\s*\|(?:(?:\e.*m)?.(?:\e.*m)?){@bef})((?:(?:\e.*m)?.(?:\e.*m)?){@at})((?:(?:\e.*m)?.(?:\e.*m)?){@aft}\|)$'
-    after=$(bytesafter $offset $length);
+    bytesafter $offset $length;
+    after=$bytesafter;
 
     hexpattern=${hexpattern//@bef/$offset};
     hexpattern=${hexpattern//@at/$length};
