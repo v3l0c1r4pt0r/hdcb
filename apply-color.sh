@@ -46,6 +46,11 @@ while read -r line; do
         colorbytes "$line" $fgcolor $bgcolor $offset $lng;
         offset=0;
     elif [ $enabler -eq 1 ]; then
+        if [ "$line" == "*" ]; then
+            echo "$line";
+            enabler=0;
+            continue;
+        fi;
         lng=$(echo "$cmdstream" | sed "${iterator}q;d");
         colorbytes "$line" $fgcolor $bgcolor $offset $lng;
     else
