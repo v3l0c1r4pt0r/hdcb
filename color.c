@@ -13,7 +13,7 @@ size_t skipcolor(char* buf);
 const int OFFSET_SIZE = 8;
 const uint8_t OFFSET_MASK = 0xf0, LENGTH_MASK = 0x0f;
 
-int apply_to_line(char* line, coloring_descr_t* descr)
+int apply_to_line(char* line, line_coloring_descr_t* descr)
 {
     /*
      * 000001c0  [38;5;0m[48;5;3m01 00 [0m[38;5;15m[48;5;4mee [0m[38;5;0m[48;5;5mff ff ff [0m[38;5;0m[48;5;6m01 00  00 00 [0m[38;5;0m[48;5;7m2e 60 38 3a [0m[38;5;0m[48;5;2m00 [0m[38;5;0m[48;5;3m00[0m  |[38;5;0m[48;5;3m..[0m[38;5;15m[48;5;4m.[0m[38;5;0m[48;5;5m...[0m[38;5;0m[48;5;6m....[0m[38;5;0m[48;5;7m.`8:[0m[38;5;0m[48;5;2m.[0m[38;5;0m[48;5;3m.[0m|
@@ -32,11 +32,11 @@ int apply_to_line(char* line, coloring_descr_t* descr)
             cursor += esc_size;
             continue;
         }
-        if(end_off == line_off)
+        if(length(descr)>0 && end_off == line_off)
         {
             printf("\e[0m");
         }
-        if(line_off == offset(descr))
+        if(length(descr)>0 && line_off == offset(descr))
         {
             printf("\e[48;5;%dm\e[38;5;%dm", descr->bg, descr->fg);
         }
@@ -65,16 +65,20 @@ int apply_to_line(char* line, coloring_descr_t* descr)
                     printf("%.*s", esc_size, cursor);
                     cursor += esc_size;
                 }
-                if(end_off == -line_off)
+                if(length(descr)>0 && end_off == -line_off)
                 {
                     printf("\e[0m");
                 }
-                if(-line_off == offset(descr))
+                if(length(descr)>0 && -line_off == offset(descr))
                 {
                     printf("\e[48;5;%dm\e[38;5;%dm", descr->bg, descr->fg);
                 }
                 printf("%c", *cursor);
                 ++cursor;
+            }
+            if(length(descr)>0 && end_off == -line_off)
+            {
+                printf("\e[0m");
             }
             while(isescape(*cursor))
             {
@@ -137,12 +141,12 @@ size_t skipcolor(char* buf)
     return 1;
 }
 
-inline uint8_t length(coloring_descr_t* descr)
+inline uint8_t length(line_coloring_descr_t* descr)
 {
     return descr->offlen & LENGTH_MASK;
 }
 
-inline uint8_t offset(coloring_descr_t* descr)
+inline uint8_t offset(line_coloring_descr_t* descr)
 {
     return descr->offlen >> 4;
 }
