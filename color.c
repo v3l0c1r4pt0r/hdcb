@@ -22,7 +22,7 @@ char *apply_to_line(char* line, line_coloring_descr_t* descr)
     char *new_line = (char*)malloc(0x1000);
     char *cursor = line + OFFSET_SIZE;
     int8_t line_off = 0;
-    uint8_t end_off = offset(descr) + length(descr);
+    uint8_t end_off = descr->offset + descr->length;
     sprintf(new_line, "%.*s", OFFSET_SIZE, line);
     while(*cursor != '\0')
     {
@@ -33,12 +33,12 @@ char *apply_to_line(char* line, line_coloring_descr_t* descr)
             cursor += esc_size;
             continue;
         }
-        if(length(descr)>0 && end_off == line_off)
+        if(descr->length>0 && end_off == line_off)
         {
             sprintf(new_line, "%s\e[0m", new_line);
             end_off = 16;
         }
-        if(length(descr)>0 && line_off == offset(descr))
+        if(descr->length>0 && line_off == descr->offset)
         {
             sprintf(new_line, "%s\e[48;5;%dm\e[38;5;%dm", new_line, descr->bg, descr->fg);
         }
@@ -59,7 +59,7 @@ char *apply_to_line(char* line, line_coloring_descr_t* descr)
         {
             sprintf(new_line, "%s|", new_line);
             ++cursor;
-            end_off = offset(descr) + length(descr);
+            end_off = descr->offset + descr->length;
             for(line_off = 0; line_off > -16; line_off--)
             {
                 while(isescape(*cursor))
@@ -68,11 +68,11 @@ char *apply_to_line(char* line, line_coloring_descr_t* descr)
                     sprintf(new_line, "%s%.*s", new_line, esc_size, cursor);
                     cursor += esc_size;
                 }
-                if(length(descr)>0 && end_off == -line_off)
+                if(descr->length>0 && end_off == -line_off)
                 {
                     sprintf(new_line, "%s\e[0m", new_line);
                 }
-                if(length(descr)>0 && -line_off == offset(descr))
+                if(descr->length>0 && -line_off == descr->offset)
                 {
                     sprintf(new_line, "%s\e[48;5;%dm\e[38;5;%dm", new_line, descr->bg,
                         descr->fg);
@@ -80,7 +80,7 @@ char *apply_to_line(char* line, line_coloring_descr_t* descr)
                 sprintf(new_line, "%s%c", new_line, *cursor);
                 ++cursor;
             }
-            if(length(descr)>0 && end_off == -line_off)
+            if(descr->length>0 && end_off == -line_off)
             {
                 sprintf(new_line, "%s\e[0m", new_line);
             }
@@ -145,12 +145,12 @@ size_t skipcolor(char* buf)
     return 1;
 }
 
-inline uint8_t length(line_coloring_descr_t* descr)
-{
-    return descr->offlen & LENGTH_MASK;
-}
-
-inline uint8_t offset(line_coloring_descr_t* descr)
-{
-    return descr->offlen >> 4;
-}
+// inline uint8_t length(line_coloring_descr_t* descr)
+// {
+//     return descr->offlen & LENGTH_MASK;
+// }
+// 
+// inline uint8_t offset(line_coloring_descr_t* descr)
+// {
+//     return descr->offlen >> 4;
+// }

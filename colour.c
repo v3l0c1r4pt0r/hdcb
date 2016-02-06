@@ -36,22 +36,22 @@ int main(int argc, char **argv)
         cursor->bg = bg;
         cursor->fg = fg;
 
-        cursor->offlen = off % 16;
-        while(cursor->offlen + len > 16)
+        cursor->offset = off % 16;
+        while(cursor->offset + len > 16)
         {
-            cursor->offlen = (cursor->offlen << 4) | (16 - cursor->offlen);
+            cursor->length = 16 - cursor->offset;
             install((off / 16) << 4, cursor);
             off = ((off / 16) << 4) + 0x10;
-            len -= length(cursor);
+            len -= cursor->length;
             cursor =
                 (line_coloring_descr_t*)malloc(sizeof(line_coloring_descr_t));
-            cursor->offlen = off % 16;
+            cursor->offset = off % 16;
             cursor->bg = bg;
             cursor->fg = fg;
         }
         if(len)
         {
-            cursor->offlen = (cursor->offlen << 4) | len;
+            cursor->length = len;
             install((off / 16) << 4, cursor);
         }
 
