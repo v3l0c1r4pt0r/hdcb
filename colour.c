@@ -84,6 +84,6 @@ int main(int argc, char **argv)
         printf("%s", this_line);
         strcpy(this_line, next_line);
     }
-    printf("%s\n", this_line);
+    printf("%s", this_line);
     return 0;
 }
