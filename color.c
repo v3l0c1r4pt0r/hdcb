@@ -33,12 +33,12 @@ char *apply_to_line(char* line, line_coloring_descr_t* descr)
             cursor += esc_size;
             continue;
         }
-        if(descr->length>0 && end_off == line_off)
+        if(isspace(*cursor) && descr->length>0 && end_off == line_off)
         {
             sprintf(new_line, "%s\e[0m", new_line);
             end_off = 16;
         }
-        if(descr->length>0 && line_off == descr->offset)
+        if(ishex(*cursor) && descr->length>0 && line_off == descr->offset)
         {
             sprintf(new_line, "%s\e[48;5;%dm\e[38;5;%dm", new_line, descr->bg, descr->fg);
         }
@@ -62,12 +62,6 @@ char *apply_to_line(char* line, line_coloring_descr_t* descr)
             end_off = descr->offset + descr->length;
             for(line_off = 0; line_off > -16; line_off--)
             {
-                while(isescape(*cursor))
-                {
-                    size_t esc_size = skipcolor(cursor);
-                    sprintf(new_line, "%s%.*s", new_line, esc_size, cursor);
-                    cursor += esc_size;
-                }
                 if(descr->length>0 && end_off == -line_off)
                 {
                     sprintf(new_line, "%s\e[0m", new_line);
@@ -76,6 +70,12 @@ char *apply_to_line(char* line, line_coloring_descr_t* descr)
                 {
                     sprintf(new_line, "%s\e[48;5;%dm\e[38;5;%dm", new_line, descr->bg,
                         descr->fg);
+                }
+                while(isescape(*cursor))
+                {
+                    size_t esc_size = skipcolor(cursor);
+                    sprintf(new_line, "%s%.*s", new_line, esc_size, cursor);
+                    cursor += esc_size;
                 }
                 sprintf(new_line, "%s%c", new_line, *cursor);
                 ++cursor;
