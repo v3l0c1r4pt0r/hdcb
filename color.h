@@ -33,4 +33,4 @@ uint8_t length(line_coloring_descr_t *descr);
 /**
  * \brief apply coloring scheme described by descr to line given
  */
-int apply_to_line(char *line, line_coloring_descr_t *descr);
+char* apply_to_line(char* line, line_coloring_descr_t* descr);

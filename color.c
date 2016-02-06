@@ -13,85 +13,89 @@ size_t skipcolor(char* buf);
 const int OFFSET_SIZE = 8;
 const uint8_t OFFSET_MASK = 0xf0, LENGTH_MASK = 0x0f;
 
-int apply_to_line(char* line, line_coloring_descr_t* descr)
+char *apply_to_line(char* line, line_coloring_descr_t* descr)
 {
     /*
      * 000001c0  [38;5;0m[48;5;3m01 00 [0m[38;5;15m[48;5;4mee [0m[38;5;0m[48;5;5mff ff ff [0m[38;5;0m[48;5;6m01 00  00 00 [0m[38;5;0m[48;5;7m2e 60 38 3a [0m[38;5;0m[48;5;2m00 [0m[38;5;0m[48;5;3m00[0m  |[38;5;0m[48;5;3m..[0m[38;5;15m[48;5;4m.[0m[38;5;0m[48;5;5m...[0m[38;5;0m[48;5;6m....[0m[38;5;0m[48;5;7m.`8:[0m[38;5;0m[48;5;2m.[0m[38;5;0m[48;5;3m.[0m|
      * 000001a0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
      */
+    char *new_line = (char*)malloc(0x1000);
     char *cursor = line + OFFSET_SIZE;
     int8_t line_off = 0;
     uint8_t end_off = offset(descr) + length(descr);
-    printf("%.*s", OFFSET_SIZE, line);
+    sprintf(new_line, "%.*s", OFFSET_SIZE, line);
     while(*cursor != '\0')
     {
         if(isescape(*cursor))
         {
             size_t esc_size = skipcolor(cursor);
-            printf("%.*s", esc_size, cursor);
+            sprintf(new_line, "%s%.*s", new_line, esc_size, cursor);
             cursor += esc_size;
             continue;
         }
         if(length(descr)>0 && end_off == line_off)
         {
-            printf("\e[0m");
+            sprintf(new_line, "%s\e[0m", new_line);
+            end_off = 16;
         }
         if(length(descr)>0 && line_off == offset(descr))
         {
-            printf("\e[48;5;%dm\e[38;5;%dm", descr->bg, descr->fg);
+            sprintf(new_line, "%s\e[48;5;%dm\e[38;5;%dm", new_line, descr->bg, descr->fg);
         }
         if(isspace(*cursor))
         {
-            printf(" ");
+            sprintf(new_line, "%s%c", new_line, *cursor);
             ++cursor;
             continue;
         }
         if(ishex(*cursor) && ishex(*(cursor + 1)))
         {
-            printf("%c%c", *cursor, *(cursor + 1));
+            sprintf(new_line, "%s%c%c", new_line, *cursor, *(cursor + 1));
             ++line_off;
             cursor += 2;
             continue;
         }
         if(line_off == 16)
         {
-            printf("|");
+            sprintf(new_line, "%s|", new_line);
             ++cursor;
+            end_off = offset(descr) + length(descr);
             for(line_off = 0; line_off > -16; line_off--)
             {
                 while(isescape(*cursor))
                 {
                     size_t esc_size = skipcolor(cursor);
-                    printf("%.*s", esc_size, cursor);
+                    sprintf(new_line, "%s%.*s", new_line, esc_size, cursor);
                     cursor += esc_size;
                 }
                 if(length(descr)>0 && end_off == -line_off)
                 {
-                    printf("\e[0m");
+                    sprintf(new_line, "%s\e[0m", new_line);
                 }
                 if(length(descr)>0 && -line_off == offset(descr))
                 {
-                    printf("\e[48;5;%dm\e[38;5;%dm", descr->bg, descr->fg);
+                    sprintf(new_line, "%s\e[48;5;%dm\e[38;5;%dm", new_line, descr->bg,
+                        descr->fg);
                 }
-                printf("%c", *cursor);
+                sprintf(new_line, "%s%c", new_line, *cursor);
                 ++cursor;
             }
             if(length(descr)>0 && end_off == -line_off)
             {
-                printf("\e[0m");
+                sprintf(new_line, "%s\e[0m", new_line);
             }
             while(isescape(*cursor))
             {
                 size_t esc_size = skipcolor(cursor);
-                printf("%.*s", esc_size, cursor);
+                sprintf(new_line, "%s%.*s", new_line, esc_size, cursor);
                 cursor += esc_size;
             }
-            printf("|\n");
-            return 1;
+            sprintf(new_line, "%s|\n", new_line);
+            return new_line;
         }
         ++cursor;
     }
-    return 0;
+    return line;
 }
 
 inline int isescape(int c)

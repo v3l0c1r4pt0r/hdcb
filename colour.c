@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "color.h"
+#include "dict.h"
 
 const int args_per_descr = 4;
 
@@ -10,57 +12,78 @@ int main(int argc, char **argv)
     --argc;
     ++argv;
     // parse argv into dictionary
-    coloring_descr_t descr[argc/args_per_descr], *cursor = descr;
+    // TODO: dictionary to let fields pass line boundary
     while(argc >= args_per_descr)
     {
-        cursor->offset = strtol(*argv, NULL, 16);
+        line_coloring_descr_t *cursor =
+            (line_coloring_descr_t*)malloc(sizeof(line_coloring_descr_t));
+        off_t off = strtol(*argv, NULL, 16);
         --argc;
         ++argv;
 
-        cursor->length = strtol(*argv, NULL, 16);
+        size_t len = strtol(*argv, NULL, 16);
         --argc;
         ++argv;
 
-        cursor->bg = strtol(*argv, NULL, 16);
+        uint16_t bg = strtol(*argv, NULL, 16);
         --argc;
         ++argv;
 
-        cursor->fg = strtol(*argv, NULL, 16);
+        uint16_t fg = strtol(*argv, NULL, 16);
         --argc;
         ++argv;
 
-        cursor++;
+        cursor->bg = bg;
+        cursor->fg = fg;
+
+        cursor->offlen = off % 16;
+        while(cursor->offlen + len > 16)
+        {
+            cursor->offlen = (cursor->offlen << 4) | (16 - cursor->offlen);
+            install((off / 16) << 4, cursor);
+            off = ((off / 16) << 4) + 0x10;
+            len -= length(cursor);
+            cursor =
+                (line_coloring_descr_t*)malloc(sizeof(line_coloring_descr_t));
+            cursor->offlen = off % 16;
+            cursor->bg = bg;
+            cursor->fg = fg;
+        }
+        if(len)
+        {
+            cursor->offlen = (cursor->offlen << 4) | len;
+            install((off / 16) << 4, cursor);
+        }
+
     }
 
     // foreach line in stdin apply from dict
-    cursor = descr;
-    char *this_line = NULL, *next_line = NULL;
+    char *this_line = NULL, *next_line = NULL, *old_line;
     ssize_t ret = 0;
     size_t bytes;
     getline(&this_line, &bytes, stdin);
     while(getline(&next_line, &bytes, stdin) != -1)
     {
-        line_coloring_descr_t dscr = {0};
         off_t this_line_off = strtol(this_line, NULL, 16);
-        if(this_line_off == ((cursor->offset / 16) << 4))
+        struct nlist *nlist = lookup(this_line_off);
+        while(nlist)
         {
             // fill dscr to color the line
-            dscr.offlen = cursor->offset % 16 << 4;
-            dscr.bg = cursor->bg;
-            dscr.fg = cursor->fg;
-            if(offset(&dscr) + cursor->length > 16)
+            if(nlist->key == this_line_off)
             {
-                dscr.offlen |= (16 - offset(&dscr));
+                line_coloring_descr_t *descr = nlist->value;
+                old_line = this_line;
+                this_line = apply_to_line(this_line, descr);
+                if(this_line != old_line)
+                {
+                    free(old_line);
+                }
             }
-            else
-            {
-                dscr.offlen |= cursor->length;
-            }
-            ++cursor;
+            nlist = nlist->next;
         }
-        apply_to_line(this_line, &dscr);
-        this_line = next_line;
+        printf("%s", this_line);
+        strcpy(this_line, next_line);
     }
-    printf("\n", this_line);
+    printf("%s\n", this_line);
     return 0;
 }
