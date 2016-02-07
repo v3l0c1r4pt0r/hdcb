@@ -22,3 +22,5 @@ init;
 source ./$script;
 
 print;
+
+legend;

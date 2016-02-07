@@ -72,3 +72,29 @@ function define {
 function use {
     color ${vars[$1,1]} "${vars[$1,2]}:${vars[$1,3]}"
 }
+
+function legend {
+    varnames=""
+    esc="\e[0m"
+    for index in ${!vars[*]}
+    do
+        re='^(.*),.*$'
+        while [[ $index =~ $re ]]; do
+            index=${BASH_REMATCH[1]}
+        done
+        varnames="$varnames$index\n"
+    done
+    echo
+    for varname in $(echo -ne "$varnames" | sort | uniq); do
+        bg=${vars[$varname,2]}
+        fg=${vars[$varname,3]}
+        bgcmd="\e[38;5;${bg}m"
+        fgcmd="\e[48;5;${fg}m"
+        ttycursor;
+        if (( $COLUMN + ${#varname} + 2 > 80 )); then
+            echo
+        fi;
+        echo -ne "[$bgcmd$fgcmd$varname$esc] ";
+    done;
+    echo
+}

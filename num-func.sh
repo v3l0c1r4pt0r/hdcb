@@ -23,3 +23,12 @@ function hextodec {
     comm=${comm//@num/$hextobc};
     hextodec=$(echo "$comm" | bc);
 }
+
+# get position of cursor in tty
+function ttycursor {
+    echo -en "\E[6n"
+    read -sdR CURPOS
+    CURPOS=${CURPOS#*[}
+    COLUMN=$(echo $CURPOS | sed 's/^.*;\(.*\)$/\1/')
+    ROW=$(echo $CURPOS | sed 's/^\(.*\);.*$/\1/')
+}
