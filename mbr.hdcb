@@ -1,11 +1,21 @@
 #!./hdcb.sh
-color 446;
+define "bootcode" 446 0 1
+define "status" 1 0 2
+define "chs_start" 3 0 3
+define "type" 1 15 4
+define "chs_end" 3 0 5
+define "lba_start" 4 0 6
+define "num_of_sectors" 4 0 7
+define "signature" 2 15 8
+use "bootcode"
+# color 446;
+cursor=446
 for (( X=0; X<4; X++)); do
-    color 1 "0:2";  # status
-    color 3 "0:3";  # CHS
-    color 1 "15:4"; # type
-    color 3 "0:5";  # CHS end
-    color 4 "0:6";  # start LBA
-    color 4 "0:7"; # num of sectors
+    use "status"
+    use "chs_start"
+    use "type"
+    use "chs_end"
+    use "lba_start"
+    use "num_of_sectors"
 done;
-color 2 "15:8"; # signature
+use "signature"
