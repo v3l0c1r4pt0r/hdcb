@@ -66,7 +66,7 @@ int main(int argc, char **argv)
     {
         off_t this_line_off = strtol(this_line, NULL, 16);
         struct nlist *nlist = lookup(this_line_off);
-        while(nlist)
+        while(nlist && *this_line != '*')
         {
             // fill dscr to color the line
             if(nlist->key == this_line_off)
