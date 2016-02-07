@@ -6,6 +6,8 @@ bgcmd="\e[48;5;@@@m"
 fgcmd="\e[38;5;@@@m"
 offcmd="\033[0m"
 
+source ./num-func.sh
+
 # convert input number to hexadecimal form
 function tohex {
     if [ $# -ne 1 ]; then
@@ -22,29 +24,6 @@ function tohex {
         echo "Error! Invalid input for tohex()"
         exit 2
     fi;
-}
-
-# convert hex number to bc-compatible format
-function hextobc {
-    if [ $# -ne 1 ]; then
-        echo "Error! Invalid arguments for getlinecaption()";
-        exit 1;
-    fi;
-    input=${1//0x/};
-    input=${input^^};
-    hextobc=$input;
-}
-
-# convert hex to decimal
-function hextodec {
-    if [ $# -ne 1 ]; then
-        echo "Error! Invalid arguments for getlinecaption()";
-        exit 1;
-    fi;
-    comm='ibase=16;@num'
-    hextobc $1;
-    comm=${comm//@num/$hextobc};
-    hextodec=$(echo "$comm" | bc);
 }
 
 # get first byte number in line that contains byte given

@@ -1,6 +1,8 @@
 #!/bin/sh
 # function library for hdcb main script
 
+source ./num-func.sh
+
 # initialize environment
 function init {
     cursor=0
