@@ -25,11 +25,11 @@ int main(int argc, char **argv)
         --argc;
         ++argv;
 
-        uint16_t bg = strtol(*argv, NULL, 16);
+        uint16_t fg = strtol(*argv, NULL, 16);
         --argc;
         ++argv;
 
-        uint16_t fg = strtol(*argv, NULL, 16);
+        uint16_t bg = strtol(*argv, NULL, 16);
         --argc;
         ++argv;
 
