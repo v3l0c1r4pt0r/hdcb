@@ -2,6 +2,7 @@
 # function library for hdcb main script
 
 source ./num-func.sh
+source ./file-func.sh
 
 # initialize environment
 function init {
@@ -78,16 +79,32 @@ function define {
 }
 
 # use defined variable
-# usage: use VARNAME [dup]
+# usage: use VARNAME [dup] [shellvar]
+# NOTE: if shellvar ends with l, the value will be read as little-endian
 function use {
     if [ $# -lt 1 ]; then
         echo "Error! Invalid arguments for use()";
         exit 1;
     fi;
     len=${vars[$1,1]};
-    if [ $# -ge 2 ]; then
+    shellvar=""
+    if [ $# -ge 2 ] && [ "$2" -eq "$2" ] 2>/dev/null; then
         # duplicate variable DUP times
         let len*=$2;
+    elif [ $# -ge 2 ]; then
+        shellvar=$2
+    fi;
+    if [ $# -ge 3 ]; then
+        shellvar=$3;
+    fi;
+    if [ ! -z "$shellvar" ]; then
+        let lastindex=${#shellvar}-1;
+        endianness=${shellvar:$lastindex:1};
+        if [ "$endianness" == "l" ]; then
+            value_le $shellvar $cursor $len;
+        else
+            value_be $shellvar $cursor $len;
+        fi;
     fi;
     color $len "${vars[$1,2]}:${vars[$1,3]}"
 }
