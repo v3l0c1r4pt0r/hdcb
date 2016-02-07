@@ -17,19 +17,19 @@ int main(int argc, char **argv)
     {
         line_coloring_descr_t *cursor =
             (line_coloring_descr_t*)malloc(sizeof(line_coloring_descr_t));
-        off_t off = strtol(*argv, NULL, 16);
+        off_t off = strtol(*argv, NULL, 0);
         --argc;
         ++argv;
 
-        size_t len = strtol(*argv, NULL, 16);
+        size_t len = strtol(*argv, NULL, 0);
         --argc;
         ++argv;
 
-        uint16_t fg = strtol(*argv, NULL, 16);
+        uint16_t fg = strtol(*argv, NULL, 0);
         --argc;
         ++argv;
 
-        uint16_t bg = strtol(*argv, NULL, 16);
+        uint16_t bg = strtol(*argv, NULL, 0);
         --argc;
         ++argv;
 

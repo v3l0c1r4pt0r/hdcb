@@ -7,6 +7,7 @@ source ./num-func.sh
 function init {
     cursor=0
     clriterator=0
+    clrstream=""
 }
 
 function squeeze {
@@ -16,7 +17,7 @@ function squeeze {
 # pick next default color pair
 function pick {
     pickedcolor="${clrlist[$clriterator]}";
-    # FIXME: removing colro from array would be safer
+    # FIXME: removing color from array would be safer
     if [ "${clrlist[$clriterator]}t" == "t" ]; then
         echo "Warning! Exhausted all possible automatic color pairs";
         pickedcolor="9:0";
@@ -43,10 +44,10 @@ function color {
         offset=$3
     fi;
 
-    hd="$(echo "$hd" | ./apply-color.sh ${color//:/ } $offset $length)";
+    clrstream="$clrstream $offset $length ${color//:/ }";
     cursor=$((offset + length));
 }
 
 function print {
-    echo "$hd";
+    echo "$hd" | ./colour $clrstream;
 }
