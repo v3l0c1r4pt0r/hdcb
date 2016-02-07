@@ -15,6 +15,8 @@ binfile=$2;
 # get hex dump
 hd=$(hexdump -Cv $binfile)
 
+# initialization
+declare -A vars
 init;
 
 source ./$script;

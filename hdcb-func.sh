@@ -51,3 +51,24 @@ function color {
 function print {
     echo "$hd" | ./colour $clrstream;
 }
+
+# define new variable
+# usage: define VARNAME length bg-color fg-color
+function define {
+# TODO: bg and fg should be optional
+    # args
+    varname=$1
+    len=$2
+    bg=$3
+    fg=$4
+
+    vars[$varname,1]=$len
+    vars[$varname,2]=$bg
+    vars[$varname,3]=$fg
+}
+
+# use defined variable
+# usage: use VARNAME
+function use {
+    color ${vars[$1,1]} "${vars[$1,2]}:${vars[$1,3]}"
+}
