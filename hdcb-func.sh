@@ -53,14 +53,24 @@ function print {
 }
 
 # define new variable
-# usage: define VARNAME length bg-color fg-color
+# usage: define VARNAME length [bg-color fg-color]
 function define {
-# TODO: bg and fg should be optional
+    if [ $# -lt 2 ]; then
+        echo "Error! Invalid arguments for define()";
+        exit 1;
+    fi;
+
     # args
     varname=$1
     len=$2
-    bg=$3
-    fg=$4
+    if [ $# -ge 4 ];then
+        bg=$3
+        fg=$4
+    else
+        pick;
+        bg=$(echo $pickedcolor | sed 's/^\(.*\):.*$/\1/')
+        fg=$(echo $pickedcolor | sed 's/^.*:\(.*\)$/\1/')
+    fi;
 
     vars[$varname,1]=$len
     vars[$varname,2]=$bg
@@ -70,6 +80,10 @@ function define {
 # use defined variable
 # usage: use VARNAME [dup]
 function use {
+    if [ $# -lt 1 ]; then
+        echo "Error! Invalid arguments for use()";
+        exit 1;
+    fi;
     len=${vars[$1,1]};
     if [ $# -ge 2 ]; then
         # duplicate variable DUP times
