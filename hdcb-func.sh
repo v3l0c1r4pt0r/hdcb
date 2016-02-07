@@ -68,9 +68,14 @@ function define {
 }
 
 # use defined variable
-# usage: use VARNAME
+# usage: use VARNAME [dup]
 function use {
-    color ${vars[$1,1]} "${vars[$1,2]}:${vars[$1,3]}"
+    len=${vars[$1,1]};
+    if [ $# -ge 2 ]; then
+        # duplicate variable DUP times
+        let len*=$2;
+    fi;
+    color $len "${vars[$1,2]}:${vars[$1,3]}"
 }
 
 function legend {
