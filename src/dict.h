@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 
 struct nlist { /* table entry: */
     struct nlist *next; /* next entry in chain */
