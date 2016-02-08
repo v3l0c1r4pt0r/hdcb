@@ -10,7 +10,7 @@ int isescape(int c);
 int ishex(int c);
 size_t skipcolor(char* buf);
 
-const int OFFSET_SIZE = 8;
+const int OFFSET_SIZE = 10;
 const uint8_t OFFSET_MASK = 0xf0, LENGTH_MASK = 0x0f;
 
 char *apply_to_line(char* line, line_coloring_descr_t* descr)
@@ -26,6 +26,11 @@ char *apply_to_line(char* line, line_coloring_descr_t* descr)
     sprintf(new_line, "%.*s", OFFSET_SIZE, line);
     while(*cursor != '\0')
     {
+        if((isspace(*cursor) || isescape(*cursor)) && descr->length>0 && end_off == line_off)
+        {
+            sprintf(new_line, "%s\e[0m", new_line);
+            end_off = 16;
+        }
         if(isescape(*cursor))
         {
             size_t esc_size = skipcolor(cursor);
@@ -33,12 +38,7 @@ char *apply_to_line(char* line, line_coloring_descr_t* descr)
             cursor += esc_size;
             continue;
         }
-        if(isspace(*cursor) && descr->length>0 && end_off == line_off)
-        {
-            sprintf(new_line, "%s\e[0m", new_line);
-            end_off = 16;
-        }
-        if(ishex(*cursor) && descr->length>0 && line_off == descr->offset)
+        if((ishex(*cursor) || isspace(*cursor)) && descr->length>0 && line_off == descr->offset)
         {
             sprintf(new_line, "%s\e[48;5;%dm\e[38;5;%dm", new_line, descr->bg, descr->fg);
         }
