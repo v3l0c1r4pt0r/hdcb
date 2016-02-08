@@ -1,18 +1,6 @@
 #!/bin/sh
 # library of input file manipulation functions
 
-# get n-th byte from hexdump
-# usage: getbyte N
-function getbyte {
-    if [ $# -lt 1 ]; then
-        echo "Error! Invalid arguments for getbyte()";
-        exit 1;
-    fi;
-    n=$1
-    echo "TODO: implement ${FUNCNAME[0]}"
-    getbyte=2;
-}
-
 # get value of var starting at OFFSET having LENGTH and store it in SHELLVAR
 # usage: value_le SHELLVAR OFFSET LENGTH
 # NOTE: this function gets little-endian value
@@ -25,9 +13,14 @@ function value_le {
     offset=$2
     length=$3
 
-    echo "TODO: implement ${FUNCNAME[0]}"
-    getbyte $offset;
-    eval $shellvar=$getbyte
+    if [ $length -gt 8 ]; then
+        echo "Unsupported length"
+        return;
+    fi;
+
+    hexval=$(dd if=$binfile bs=1 skip=$offset count=$length 2>/dev/null | xxd -ps)
+    lehextodec $hexval $length;
+    eval $shellvar=$lehextodec;
 }
 
 function value_be {

@@ -98,12 +98,12 @@ function use {
         shellvar=$3;
     fi;
     if [ ! -z "$shellvar" ]; then
-        let lastindex=${#shellvar}-1;
-        endianness=${shellvar:$lastindex:1};
-        if [ "$endianness" == "l" ]; then
+        let typeindex=${#shellvar}-2;
+        endianness=${shellvar:$typeindex:2};
+        if [ "$endianness" == "_l" ]; then
             value_le $shellvar $cursor $len;
         else
-            value_be $shellvar $cursor $len;
+            echo "Unsupported shellvar name"
         fi;
     fi;
     color $len "${vars[$1,2]}:${vars[$1,3]}"

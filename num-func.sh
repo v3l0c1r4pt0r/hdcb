@@ -32,3 +32,23 @@ function ttycursor {
     COLUMN=$(echo $CURPOS | sed 's/^.*;\(.*\)$/\1/')
     ROW=$(echo $CURPOS | sed 's/^\(.*\);.*$/\1/')
 }
+
+# convert little-endian VALUE of LENGTH to decimal
+# usage: lehextodec VALUE LENGTH
+function lehextodec {
+    if [ $# -lt 2 ]; then
+        echo "Error! Invalid arguments for ${FUNCNAME[0]}()";
+        exit 1;
+    fi;
+    value=$1
+    length=$2
+
+    lehextodec=0
+    power=1
+
+    for (( i=0; i<${#value}; i+=2 )); do
+        hextodec ${value:$i:2};
+        let lehextodec+=($hextodec * $power);
+        let power*=256;
+    done;
+}
