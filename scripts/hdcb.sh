@@ -5,8 +5,9 @@ if [ $# -ne 2 ]; then
     exit 1;
 fi;
 
-source ./hdcb-func.sh
-source ./colors.sh
+# TODO: parametrize includes
+source /usr/local/share/hdcb/hdcb-func.sh
+source /usr/local/share/hdcb/colors.sh
 
 # vars
 script=$1;
@@ -19,7 +20,7 @@ hd=$(hexdump -Cv $binfile)
 declare -A vars
 init;
 
-source ./$script;
+source $script;
 
 print;
 
