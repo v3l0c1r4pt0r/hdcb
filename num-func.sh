@@ -52,3 +52,23 @@ function lehextodec {
         let power*=256;
     done;
 }
+
+# convert big-endian VALUE of LENGTH to decimal
+# usage: behextodec VALUE LENGTH
+function behextodec {
+    if [ $# -lt 2 ]; then
+        echo "Error! Invalid arguments for ${FUNCNAME[0]}()";
+        exit 1;
+    fi;
+    value=$1
+    length=$2
+
+    lehextodec=0
+    power=1
+
+    for (( i=${#value}-2; i>=0; i-=2 )); do
+        hextodec ${value:$i:2};
+        let lehextodec+=($hextodec * $power);
+        let power*=256;
+    done;
+}

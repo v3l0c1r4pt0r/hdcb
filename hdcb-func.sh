@@ -100,11 +100,15 @@ function use {
     if [ ! -z "$shellvar" ]; then
         let typeindex=${#shellvar}-2;
         endianness=${shellvar:$typeindex:2};
-        if [ "$endianness" == "_l" ]; then
-            value_le $shellvar $cursor $len;
-        else
-            echo "Unsupported shellvar name"
-        fi;
+        case "$endianness" in
+            "_l" )
+                value_le $shellvar $cursor $len; ;;
+            "_b" )
+                value_be $shellvar $cursor $len; ;;
+            * )
+                echo "Suffix $endianness not supported"
+                eval $shellvar=0; ;;
+        esac
     fi;
     color $len "${vars[$1,2]}:${vars[$1,3]}"
 }
