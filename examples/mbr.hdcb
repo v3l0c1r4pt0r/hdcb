@@ -1,5 +1,4 @@
-#!/usr/local/bin/hdcb.sh
-# TODO: parametrize interpreter
+#!/usr/bin/env hdcb
 define "bootcode" 446 0 1
 define "status" 1 0 2
 define "chs_start" 3 0 3

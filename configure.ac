@@ -32,6 +32,6 @@ AC_CONFIG_FILES([Makefile
                  examples/Makefile
                  scripts/Makefile
                  src/Makefile
-                 scripts/hdcb.sh
+                 scripts/hdcb
                  scripts/hdcb-func.sh])
 AC_OUTPUT
