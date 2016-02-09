@@ -94,7 +94,7 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am $(am__DIST_COMMON)
 mkinstalldirs = $(install_sh) -d
-CONFIG_CLEAN_FILES =
+CONFIG_CLEAN_FILES = hdcb.sh hdcb-func.sh
 CONFIG_CLEAN_VPATH_FILES =
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
@@ -146,7 +146,8 @@ am__can_run_installinfo = \
   esac
 DATA = $(data_DATA)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
-am__DIST_COMMON = $(srcdir)/Makefile.in
+am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/hdcb-func.sh.in \
+	$(srcdir)/hdcb.sh.in
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
@@ -206,8 +207,6 @@ am__untar = @am__untar@
 bindir = @bindir@
 build_alias = @build_alias@
 builddir = @builddir@
-
-# TODO: move to usr/share/hdcb
 datadir = $(datarootdir)/@PACKAGE@
 datarootdir = @datarootdir@
 docdir = @docdir@
@@ -271,6 +270,10 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
+hdcb.sh: $(top_builddir)/config.status $(srcdir)/hdcb.sh.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+hdcb-func.sh: $(top_builddir)/config.status $(srcdir)/hdcb-func.sh.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 install-binSCRIPTS: $(bin_SCRIPTS)
 	@$(NORMAL_INSTALL)
 	@list='$(bin_SCRIPTS)'; test -n "$(bindir)" || list=; \

@@ -1,9 +1,11 @@
 #!/bin/sh
 # function library for hdcb main script
 
-# TODO: parametrize includes
-source /usr/local/share/hdcb/num-func.sh
-source /usr/local/share/hdcb/file-func.sh
+prefix=@prefix@
+datarootdir=@datarootdir@
+datadir=@datadir@/@PACKAGE@
+source ${datadir}/num-func.sh
+source ${datadir}/file-func.sh
 
 # initialize environment
 function init {
@@ -51,8 +53,7 @@ function color {
 }
 
 function print {
-    # TODO: parametrize includes
-    echo "$hd" | /usr/local/share/hdcb/colour $clrstream;
+    echo "$hd" | ${datadir}/colour $clrstream;
 }
 
 # define new variable

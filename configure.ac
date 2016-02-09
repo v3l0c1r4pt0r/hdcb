@@ -31,5 +31,7 @@ AC_CHECK_FUNCS([regcomp strtol])
 AC_CONFIG_FILES([Makefile
                  examples/Makefile
                  scripts/Makefile
-                 src/Makefile])
+                 src/Makefile
+                 scripts/hdcb.sh
+                 scripts/hdcb-func.sh])
 AC_OUTPUT

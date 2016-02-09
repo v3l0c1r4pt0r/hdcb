@@ -4586,7 +4586,7 @@ fi
 done
 
 
-ac_config_files="$ac_config_files Makefile examples/Makefile scripts/Makefile src/Makefile"
+ac_config_files="$ac_config_files Makefile examples/Makefile scripts/Makefile src/Makefile scripts/hdcb.sh scripts/hdcb-func.sh"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -5334,6 +5334,8 @@ do
     "examples/Makefile") CONFIG_FILES="$CONFIG_FILES examples/Makefile" ;;
     "scripts/Makefile") CONFIG_FILES="$CONFIG_FILES scripts/Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
+    "scripts/hdcb.sh") CONFIG_FILES="$CONFIG_FILES scripts/hdcb.sh" ;;
+    "scripts/hdcb-func.sh") CONFIG_FILES="$CONFIG_FILES scripts/hdcb-func.sh" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

@@ -5,9 +5,11 @@ if [ $# -ne 2 ]; then
     exit 1;
 fi;
 
-# TODO: parametrize includes
-source /usr/local/share/hdcb/hdcb-func.sh
-source /usr/local/share/hdcb/colors.sh
+prefix=@prefix@
+datarootdir=@datarootdir@
+datadir=@datadir@/@PACKAGE@
+source ${datadir}/hdcb-func.sh
+source ${datadir}/colors.sh
 
 # vars
 script=$1;
