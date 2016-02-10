@@ -60,7 +60,8 @@ char *apply_to_line(char* line, line_coloring_descr_t* descr)
             sprintf(new_line, "%s|", new_line);
             ++cursor;
             end_off = descr->offset + descr->length;
-            for(line_off = 0; line_off > -16 && *cursor != '|'; line_off--)
+            for(line_off = 0; line_off > -16 && (*cursor != '|' ||
+                *(cursor+1) != '\n'); line_off--)
             {
                 if(descr->length>0 && end_off == -line_off)
                 {
