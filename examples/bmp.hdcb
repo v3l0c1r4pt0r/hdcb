@@ -1,0 +1,48 @@
+#!/usr/bin/env hdcb
+define "signature" 2;
+define "filesize" 4;
+define "pixarr_offset" 4;
+define "hdrsize" 4;
+
+use "signature" sig_b;
+if [ $sig_b -ne 16973 ]; then
+    echo "Unsupported bitmap";
+    exit 1;
+fi;
+use "filesize";
+let cursor+=4;
+use "pixarr_offset" pixarray_l;
+
+# BITMAP*HEADER
+use "hdrsize" hdrsz_l;
+case "$hdrsz_l" in
+    40 )
+        # BITMAPINFOHEADER
+        define "width" 4;
+        define "height" 4;
+        define "color_planes" 2;
+        define "bpp" 2;
+        define "compress" 4;
+        define "raw_bmp_size" 4;
+        define "hor_ppm" 4;
+        define "ver_ppm" 4;
+        define "palette_size" 4;
+        define "important_count" 4;
+
+        use "width" width_l;
+        use "height" height_l;
+        use "color_planes";
+        use "bpp" bpp_l;
+        define "pixel" $(( bpp_l / 8));
+        use "compress";
+        use "raw_bmp_size";
+        use "hor_ppm";
+        use "ver_ppm";
+        use "palette_size";
+        use "important_count";
+        ;;
+    * )
+        define "pixel" 1;
+esac
+cursor=$pixarray_l;
+use "pixel" $(( width_l * height_l ));
