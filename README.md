@@ -87,6 +87,7 @@ Example script
 ---
 
 ```bash
+#!/usr/bin/env hdcb
 define "length" 4;
 define "string" 1;
 
