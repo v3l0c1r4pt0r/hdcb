@@ -1,2 +1,2 @@
 bindir = $(datarootdir)/@PACKAGE@/examples
-bin_SCRIPTS = mbr.hdcb
+bin_SCRIPTS = bmp.hdcb mbr.hdcb
