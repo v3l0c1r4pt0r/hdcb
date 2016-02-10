@@ -13,6 +13,7 @@ of an array.
 HDCB outputs processed file in hexdump format (hexdump's -C flag). It is then coloured according to input description script to
 make file analysis easier. Colors are picked automatically - one background-foreground pair for every defined variable. There is
 also a possibility to define custom color pair when defining a variable.
+
 ![sdc-output](https://github.com/v3l0c1r4pt0r/hdcb/blob/master/doc/sdc.png?raw=true "Analysed SDC file")
 
 Installation
@@ -79,4 +80,5 @@ This script defines two variables. First is a length field stored on four bytes.
 beginning of the file being analysed there are four bytes of length. When using this variable its value is stored in `len_l`
 shell variable. Its value is treated as little-endian. Then string is defined and `len_l` variable is used as array size. Result
 of such script would be as below.
+
 ![basic_example](https://github.com/v3l0c1r4pt0r/hdcb/blob/master/doc/example.png?raw=true "String HDCB output")
