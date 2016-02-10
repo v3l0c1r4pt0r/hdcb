@@ -128,7 +128,7 @@ function legend {
         varnames="$varnames$index\n"
     done
     echo
-    for varname in $(echo -ne "$varnames" | sort | uniq); do
+    for varname in $(echo -e "$varnames" | sort | uniq); do
         bg=${vars[$varname,2]}
         fg=${vars[$varname,3]}
         bgcmd="\e[38;5;${bg}m"

@@ -26,6 +26,12 @@ function hextodec {
 
 # get position of cursor in tty
 function ttycursor {
+    if [ ! -t 1 ]; then
+        # not an interactive shell, bye!
+        ROW=0;
+        COLUMN=0;
+        return;
+    fi;
     echo -en "\E[6n"
     read -sdR CURPOS
     CURPOS=${CURPOS#*[}
