@@ -12,7 +12,6 @@ int main(int argc, char **argv)
     --argc;
     ++argv;
     // parse argv into dictionary
-    // TODO: dictionary to let fields pass line boundary
     while(argc >= args_per_descr)
     {
         line_coloring_descr_t *cursor =
