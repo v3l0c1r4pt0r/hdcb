@@ -18,7 +18,7 @@ Colors are picked automatically - one background-foreground pair for every
 defined variable. There is also a possibility to define custom color pair when
 defining a variable.
 
-![sdc-output](https://github.com/v3l0c1r4pt0r/hdcb/blob/master/doc/sdc.png?raw=true "Analysed SDC file")
+![sdc-output](https://github.com/v3l0c1r4pt0r/hdcb/blob/master/doc/sdc.png?raw=true "Analyzed SDC file")
 
 Installation
 ---
@@ -40,7 +40,7 @@ Command description
 
 * `define` - defines variable
 
-  Usage: ```define "varname" length [background] [foreground]```;
+  Usage: ```define "varname" length [background] [foreground];```
 
   Where:
 
@@ -55,7 +55,7 @@ Command description
 
 * `use` - uses defined variable
 
-  Usage: ```use "varname" [dup] [shellvar]```;
+  Usage: ```use "varname" [dup] [shellvar];```
 
   Where:
 
@@ -71,7 +71,7 @@ Command description
 
 * `squeeze` - squeezes repeating lines
 
-  Usage: ```squeeze```;
+  Usage: ```squeeze;```
 
   This command instructs hdcb to let hexdump sqeeze lines with repeating bytes.
   It is useful when analyzing huge files since it will in some cases havily
