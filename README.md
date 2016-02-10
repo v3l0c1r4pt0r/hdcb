@@ -7,7 +7,7 @@ Overview
 HDCB is a program that is meant to ease analysis of unknown binary files on
 Linux (or any other) platform. It provides custom markup language based on bash
 (and built on top of bash interpreter, so it is possible to use standard bash
-syntax) to describe the fromat of a file. It allows to define variable of any
+syntax) to describe the format of a file. It allows to define variable of any
 length that could be used later more than one time. There is a possibility to
 use defined variable in array. HDCB allows to get value of any used variable and
 use it later in example as length of an array.
