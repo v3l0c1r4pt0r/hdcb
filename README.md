@@ -69,6 +69,14 @@ Command description
     - Variables ending with `_l` will be read as little-endian
     - Variables ending with `_b` will be read as big-endian
 
+* `squeeze` - squeezes repeating lines
+
+  Usage: ```squeeze```;
+
+  This command instructs hdcb to let hexdump sqeeze lines with repeating bytes.
+  It is useful when analyzing huge files since it will in some cases havily
+  reduce output size.
+
 Control shell variables
 ---
 
