@@ -35,6 +35,10 @@ library scripts need to have valid paths hardcoded. Default install path is
 `/usr/local/`, but it can be changed to anything else like in example
 `$HOME/bin` as long as `$HOME/bin/bin/` can be found within `$PATH`.
 
+**Prerequisites**
+
+Program requires bash in version at least *4.0*.
+
 Command description
 ---
 
