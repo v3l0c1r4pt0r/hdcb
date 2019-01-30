@@ -33,7 +33,6 @@ case "$hdrsz_l" in
         use "height" height_l;
         use "color_planes";
         use "bpp" bpp_l;
-        define "pixel" $(( bpp_l / 8));
         use "compress";
         use "raw_bmp_size";
         use "hor_ppm";
@@ -41,8 +40,40 @@ case "$hdrsz_l" in
         use "palette_size";
         use "important_count";
         ;;
+    108 )
+        # BITMAPV4HEADER
+        define "width" 4;
+        define "height" 4;
+        define "color_planes" 2;
+        define "bpp" 2;
+        define "compress" 4;
+        define "raw_bmp_size" 4;
+        define "hor_ppm" 4;
+        define "ver_ppm" 4;
+        define "palette_size" 4;
+        define "important_count" 4;
+        define "red_mask" 4;
+        define "green_mask" 4;
+        define "blue_mask" 4;
+        define "alpha_mask" 4;
+
+        use "width" width_l;
+        use "height" height_l;
+        use "color_planes";
+        use "bpp" bpp_l;
+        use "compress";
+        use "raw_bmp_size";
+        use "hor_ppm";
+        use "ver_ppm";
+        use "palette_size";
+        use "important_count";
+        #use "red_mask";
+        #use "green_mask";
+        #use "blue_mask";
+        #use "alpha_mask";
+      ;;
     * )
-        define "pixel" 1;
 esac
 cursor=$pixarray_l;
-use "pixel" $(( width_l * height_l ));
+define "pixel" 1;
+use "pixel" $(( width_l * height_l / 8 ));
