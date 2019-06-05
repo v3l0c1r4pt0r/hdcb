@@ -86,8 +86,8 @@ function define {
 # NOTE: if shellvar ends with l, the value will be read as little-endian
 function use {
     if [ $# -lt 1 ]; then
-        echo "Error! Invalid arguments for use()";
-        exit 1;
+        echo "Error! Invalid arguments for use()" >&2;
+        return 1;
     fi;
     len=${vars[$1,1]};
     shellvar=""
@@ -105,15 +105,20 @@ function use {
         endianness=${shellvar:$typeindex:2};
         case "$endianness" in
             "_l" )
-                value_le $shellvar $cursor $len; ;;
+                value_le $shellvar $cursor $len || return 1;
+                ;;
             "_b" )
-                value_be $shellvar $cursor $len; ;;
+                value_be $shellvar $cursor $len || return 1;
+                ;;
             * )
                 echo "Suffix $endianness not supported"
-                eval $shellvar=0; ;;
+                eval $shellvar=0;
+                return 1;
+                ;;
         esac
     fi;
     color $len "${vars[$1,2]}:${vars[$1,3]}"
+    return 0;
 }
 
 function legend {
